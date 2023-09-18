@@ -1,0 +1,29 @@
+$font-stack: Mulish;
+.app-bar{
+  
+  .header-container{
+
+    .logo-button{
+      font-family: $font-stack;
+      font-size: 25px;
+      font-weight: 700;
+      color: white;
+      text-transform: none;
+    }
+
+    .nav-button{
+      font-family: $font-stack;
+      color:white;
+      text-transform: none;
+      font-size: 20px;
+    }
+  }
+  .sign-in-button{
+    color:white;
+    font-family: $font-stack;
+    font-size: 20px;
+    text-transform: none;
+  }
+}
+
+ 
