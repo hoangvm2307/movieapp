@@ -54,6 +54,7 @@ const Movie = {
   upcomingList: (params: any) => requests.get("movie/upcoming", params),
   details: (id: number, params: any) => requests.get(`movie/${id}`, params),
   movieVideo: (id: number, params: any) => requests.get(`movie/${id}/videos`, params),
+  trendingTVs: (params: any) => requests.get("trending/tv/day", params)
 };
 
 const Credits = {

@@ -24,7 +24,7 @@ interface SpokenLanguage {
 export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
-  belongs_to_collection: any; // Có thể cần một model riêng cho collection
+  belongs_to_collection: any;  
   budget: number;
   genres: Genre[];
   homepage: string | null;

@@ -3,12 +3,14 @@ import { RootState } from "../../app/store/configureStore";
 import agent from "../../api/agent";
 import apiKey from "../../api/apiConfig";
 import { Movie } from "../../app/models/movie";
+import agentJS from "../../api/agentJS";
 
 interface MovieState {
   popularMovies: Movie[] | null;
   upcomingMovies: Movie[] | null;
   topratedMovies: Movie[] | null;
   nowplayingMovies: Movie[] | null;
+  trendingTVs: Movie[] | null;
 
   movieDetails: Movie[] | null;
   movieDetail: Movie | null;
@@ -17,6 +19,7 @@ interface MovieState {
   topratedMoviesLoaded: boolean;
   upcomingMoviesLoaded: boolean;
   nowplayingMoviesLoaded: boolean;
+  trendingTVsLoaded: boolean;
 
   pageNumber: number;
 }
@@ -24,27 +27,11 @@ const moviesAdapter = createEntityAdapter<Movie>({
   selectId: (movie) => movie.id,
 });
 
-const initialState: MovieState = {
-  popularMovies: null,
-  topratedMovies: null,
-  upcomingMovies: null,
-  nowplayingMovies: null,
-
-  movieDetails: null,
-  movieDetail: null,
-  status: "idle",
-  popularMoviesLoaded: false,
-  topratedMoviesLoaded: false,
-  upcomingMoviesLoaded: false,
-  nowplayingMoviesLoaded: false,
-  pageNumber: 1,
-};
-
 export const fetchPopularMoviesAsync = createAsyncThunk<[], any>(
   "tickets/fetchPopularMoviesAsync",
   async (params, thunkAPI) => {
     try {
-      const response = await agent.Movie.popularList(params);
+      const response = await agentJS.Movie.popularList(params);
       return response.results;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -56,7 +43,7 @@ export const fetchNowPlayingMoviesAsync = createAsyncThunk<[], any>(
   "tickets/fetchNowPlayingMoviesAsync",
   async (params, thunkAPI) => {
     try {
-      const response = await agent.Movie.nowplayingList(params);
+      const response = await agentJS.Movie.nowplayingList(params);
       return response.results;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -68,7 +55,7 @@ export const fetchTopRatedMoviesAsync = createAsyncThunk<[], any>(
   "tickets/fetchTopRatedMoviesAsync",
   async (params, thunkAPI) => {
     try {
-      const response = await agent.Movie.topratedList(params);
+      const response = await agentJS.Movie.topratedList(params);
       return response.results;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -80,7 +67,7 @@ export const fetchUpcomingMoviesAsync = createAsyncThunk<[], any>(
   "tickets/fetchUpcomingMoviesAsync",
   async (params, thunkAPI) => {
     try {
-      const response = await agent.Movie.upcomingList(params);
+      const response = await agentJS.Movie.upcomingList(params);
       return response.results;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -88,11 +75,22 @@ export const fetchUpcomingMoviesAsync = createAsyncThunk<[], any>(
   }
 );
 
+export const fetchTrendingTVsAsync = createAsyncThunk<[], any>(
+  "tickets/fetchTrendingTVsAsync",
+  async (params, thunkAPI) => {
+    try {
+      const response = await agentJS.Movie.trendingTVs(params);
+      return response.results;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
 export const fetchMovieDetailAsync = createAsyncThunk<Movie, { movieId: number; params: any }>(
   "tickets/fetchMovieDetailAsync",
   async ({ movieId, params }, thunkAPI) => {
     try {
-      const response = await agent.Movie.details(movieId, params);
+      const response = await agentJS.Movie.details(movieId, params);
       return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -107,6 +105,7 @@ export const movieSlice = createSlice({
     topratedMovies: null,
     upcomingMovies: null,
     nowplayingMovies: null,
+    trendingTVs: null,
 
     movieDetails: null,
     movieDetail: null,
@@ -115,6 +114,7 @@ export const movieSlice = createSlice({
     topratedMoviesLoaded: false,
     upcomingMoviesLoaded: false,
     nowplayingMoviesLoaded: false,
+    trendingTVsLoaded: false,
     pageNumber: 1,
   }),
   reducers: {},
@@ -164,6 +164,18 @@ export const movieSlice = createSlice({
       state.nowplayingMoviesLoaded = true;
     });
     builder.addCase(fetchNowPlayingMoviesAsync.rejected, (state, action) => {
+      state.status = "idle";
+    });
+
+    builder.addCase(fetchTrendingTVsAsync.pending, (state) => {
+      state.status = "pendingFetchMovies";
+    });
+    builder.addCase(fetchTrendingTVsAsync.fulfilled, (state, action) => {
+      state.status = "idle";
+      state.trendingTVs = action.payload;
+      state.trendingTVsLoaded = true;
+    });
+    builder.addCase(fetchTrendingTVsAsync.rejected, (state, action) => {
       state.status = "idle";
     });
 

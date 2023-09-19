@@ -38,12 +38,12 @@ export default function Header({ handleThemeChange, darkMode }: Props) {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box className="header-container">
-          <Button className="logo-button">PHIM HAY</Button>
+          <Button component={Link} to={`/type/show`} className="logo-button">PHIM HAY</Button>
 
           <Button className="nav-button">Tìm kiếm</Button>
           <Button className="nav-button">Phim Hot</Button>
           <Button className="nav-button">Phim Lẻ</Button>
-          <Button className="nav-button">Phim Bộ</Button>
+          <Button component={Link} to={`/type/show`} className="nav-button">Phim Bộ</Button>
           <Button className="nav-button">Phim Mới</Button>
         </Box>
 

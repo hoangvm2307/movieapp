@@ -1,3 +1,4 @@
+ 
 .movie-filter-container{
  
   padding: 12px;
@@ -17,18 +18,30 @@
 }
 
 .movie-list{
-  .movie-list__title{
-    color: #B1A21E;
-    font-size: 25px;
-    font-family: 'Mulish', Courier, monospace;
-    font-weight: 700;
-  
+  .category-header{
+    display: flex;
+    justify-content: space-between;
+
+    .movie-list__title{
+      color: #B1A21E;
+      font-size: 25px;
+      font-family: 'Mulish', Courier, monospace;
+      font-weight: 700;
+    }
+
+    .movie-list__button{
+      color: rgb(136, 136, 136);
+      text-transform: none;
+      font-size: 16px;
+    }
   }
+
+   
   .movie-list__item{
     .movie-list__item-content{
       .movie-list__item-image{
         width: 100%;
-        height: 400px;
+        height: 150%;
         object-fit: cover;
       }
       .movie-list__item-rating{

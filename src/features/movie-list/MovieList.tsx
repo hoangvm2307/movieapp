@@ -17,7 +17,14 @@ export default function MovieList({ categories }: Props) {
     <Grid container spacing={3}>
       {categories.map((category: any) => (
         <Grid item xs={12} key={category.title} className="movie-list">
-          <Typography className="movie-list__title">{category.title}</Typography>
+          <div className="category-header">
+            <Typography className="movie-list__title">{category.title}</Typography>
+            {category.movies!.length > 10 && (
+              <Button className="movie-list__button" variant="outlined">
+                See all
+              </Button>
+            )}
+          </div>
           <Box sx={{ borderBottom: "2px solid #1B3C5D", mb: "10px" }}></Box>
           <Grid container spacing={3}>
             {category.movies!.slice(0, 10).map((movie: Movie) => (
