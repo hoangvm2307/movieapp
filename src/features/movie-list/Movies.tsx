@@ -1,22 +1,18 @@
-import { Box, Button, Card, Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import "./MovieList.Module.scss";
 import MovieFilter from "./MovieFilter";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { push, ref, set } from "firebase/database";
 import { db } from "../..";
-import MovieDetailSkeleton from "./MovieDetailSkeleton";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import {
-  fetchMovieDetailAsync,
   fetchNowPlayingMoviesAsync,
   fetchPopularMoviesAsync,
   fetchTopRatedMoviesAsync,
   fetchUpcomingMoviesAsync,
 } from "./movieSlice";
-import axios from "axios";
 import apiKey from "../../api/apiConfig";
 import MovieList from "./MovieList";
-import { useParams } from "react-router-dom";
 function writeActorData() {
   const reference = ref(db, "actors");
   const newReference = push(reference);
@@ -79,13 +75,15 @@ export default function Movies() {
   ];
   if (!topratedMovies || !upcomingMovies || !nowplayingMovies || !popularMovies) return <></>;
   return (
-    <Grid container columnSpacing={4}>
-      <Grid item xs={12}>
-        <MovieFilter />
+    <Container maxWidth={"xl"} sx={{mt:"100px"}}>
+      <Grid container columnSpacing={4}>
+        <Grid item xs={12}>
+          <MovieFilter />
+        </Grid>
+        <Grid item xs={12}>
+          <MovieList categories={categories} />
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <MovieList categories={categories} />
-      </Grid>
-    </Grid>
+    </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store/configureStore";
 import agent from "../../api/agent";
 import apiKey from "../../api/apiConfig";
@@ -10,6 +10,7 @@ interface MovieState {
   topratedMovies: Movie[] | null;
   nowplayingMovies: Movie[] | null;
 
+  movieDetails: Movie[] | null;
   movieDetail: Movie | null;
   status: string;
   popularMoviesLoaded: boolean;
@@ -19,12 +20,17 @@ interface MovieState {
 
   pageNumber: number;
 }
+const moviesAdapter = createEntityAdapter<Movie>({
+  selectId: (movie) => movie.id,
+});
+
 const initialState: MovieState = {
   popularMovies: null,
   topratedMovies: null,
   upcomingMovies: null,
   nowplayingMovies: null,
 
+  movieDetails: null,
   movieDetail: null,
   status: "idle",
   popularMoviesLoaded: false,
@@ -96,7 +102,21 @@ export const fetchMovieDetailAsync = createAsyncThunk<Movie, { movieId: number; 
 
 export const movieSlice = createSlice({
   name: "movies",
-  initialState,
+  initialState: moviesAdapter.getInitialState<MovieState>({
+    popularMovies: null,
+    topratedMovies: null,
+    upcomingMovies: null,
+    nowplayingMovies: null,
+
+    movieDetails: null,
+    movieDetail: null,
+    status: "idle",
+    popularMoviesLoaded: false,
+    topratedMoviesLoaded: false,
+    upcomingMoviesLoaded: false,
+    nowplayingMoviesLoaded: false,
+    pageNumber: 1,
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchPopularMoviesAsync.pending, (state) => {
@@ -153,9 +173,11 @@ export const movieSlice = createSlice({
     builder.addCase(fetchMovieDetailAsync.fulfilled, (state, action) => {
       state.status = "idle";
       state.movieDetail = action.payload;
+      moviesAdapter.upsertOne(state, action.payload);
     });
     builder.addCase(fetchMovieDetailAsync.rejected, (state, action) => {
       state.status = "idle";
     });
   },
 });
+export const movieSelectors = moviesAdapter.getSelectors((state: RootState) => state.movie);

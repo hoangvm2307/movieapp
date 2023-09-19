@@ -16,6 +16,7 @@ const movieTypes = [
 
 export default function MovieFilter() {
   return (
+    
     <Grid container spacing={2} className="movie-filter-container">
       <Grid item xs={2} className="filter">
         <Typography className="filter-label">Loại phim</Typography>
